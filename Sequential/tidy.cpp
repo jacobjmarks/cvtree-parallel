@@ -2,9 +2,14 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <dirent.h>
+#include <iostream>
+#include <vector>
+
+using namespace std;
 
 int number_bacteria;
-char** bacteria_name;
+vector<string> bacteria_name;
 long M, M1, M2;
 short code[27] = { 0, 2, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, -1, 12, 13, 14, 15, 16, 1, 17, 18, 5, 19, 3};
 #define encode(ch)		code[ch-'A']
@@ -72,9 +77,12 @@ private:
 public:
 	long* vector;
 
-	Bacteria(char* filename)
+	Bacteria(const char* filename)
 	{
 		FILE * bacteria_file = fopen(filename,"r");
+		if (bacteria_file == NULL) {
+			throw invalid_argument("BAD DATA DIRECTORY. Please specify full relative path.");
+		}
 		InitVectors();
 
 		char ch;
@@ -113,19 +121,24 @@ public:
 	}
 };
 
-void ReadInputFile(char* input_name)
+void ReadDataDir(char* data_dir)
 {
-	FILE* input_file = fopen(input_name,"r");
-    fscanf(input_file,"%d",&number_bacteria);
-	bacteria_name = new char*[number_bacteria];
-
-	for(long i=0;i<number_bacteria;i++)
-	{
-		bacteria_name[i] = new char[20];
-		fscanf(input_file, "%s", bacteria_name[i]);	
-		strcat(bacteria_name[i],".faa");
+	// Retrieve filenames in data directory.
+	// Based on https://stackoverflow.com/a/612176
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (data_dir)) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
+			string filename = ent->d_name;
+			if (filename != "." && filename != "..") {
+				bacteria_name.push_back(data_dir + filename);
+				number_bacteria++;
+			}
+		}
+		closedir (dir);
+	} else {
+		perror ("");
 	}
-	fclose(input_file);
 }
 
 double CompareBacteria(Bacteria* b1, Bacteria* b2)
@@ -162,11 +175,11 @@ void CompareAllBacteria()
 {
     for(int i=0; i<number_bacteria-1; i++)
 	{
-		Bacteria* b1 = new Bacteria(bacteria_name[i]);
+		Bacteria* b1 = new Bacteria(bacteria_name[i].c_str());
 
 		for(int j=i+1; j<number_bacteria; j++)
 		{
-			Bacteria* b2 = new Bacteria(bacteria_name[j]);
+			Bacteria* b2 = new Bacteria(bacteria_name[j].c_str());
 			double correlation = CompareBacteria(b1, b2);
 			printf("%03d %03d -> %.10lf\n", i, j, correlation);
 			delete b2;
@@ -175,14 +188,15 @@ void CompareAllBacteria()
 	}
 }
 
-void main(int argc,char * argv[])
+int main(int argc,char * argv[])
 {
 	time_t t1 = time(NULL);
 
 	Init();
-	ReadInputFile(argv[1]);
+	ReadDataDir(argv[1]);
 	CompareAllBacteria();
 
 	time_t t2 = time(NULL);
 	printf("time elapsed: %d seconds\n", t2 - t1); 
+	return 0;
 }

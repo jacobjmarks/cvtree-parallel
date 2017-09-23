@@ -1,3 +1,3 @@
-rm seqential.o
-g++ Sequential/improved.c
-./sequential datalist.txt
+rm sequential.out
+g++ Sequential/improved.cpp -o sequential.out
+./sequential.out data/
