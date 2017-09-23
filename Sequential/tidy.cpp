@@ -88,6 +88,9 @@ public:
 				fread(buffer, sizeof(char), LEN-1, bacteria_file);
 				init_buffer(buffer);
 			}
+			else if (ch == '\r') {
+				// Skip carriage return.
+			}
 			else if (ch != '\n')
 				cont_buffer(ch);
 		}
