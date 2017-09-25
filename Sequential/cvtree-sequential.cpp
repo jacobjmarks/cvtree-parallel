@@ -17,17 +17,16 @@ short code[27] = { 0, 2, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, -1, 12, 13, 14, 
 #define AA_NUMBER		20
 #define	EPSILON			1e-010
 
-void Init()
-{
+void Init() {
 	M2 = 1;
-	for (int i=0; i<LEN-2; i++)	// M2 = AA_NUMBER ^ (LEN-2);
+	for (int i = 0; i < LEN-2; i++) {	// M2 = AA_NUMBER ^ (LEN-2);
 		M2 *= AA_NUMBER; 
+	}
 	M1 = M2 * AA_NUMBER;		// M1 = AA_NUMBER ^ (LEN-1);
 	M  = M1 *AA_NUMBER;			// M  = AA_NUMBER ^ (LEN);
 }
 
-class Bacteria
-{
+class Bacteria {
 private:
 	long* vector;
 	long* second;
@@ -37,8 +36,7 @@ private:
 	long total_l;
 	long complement;
 
-	void InitVectors()
-	{
+	void InitVectors() {
 		vector = new long [M];
 		second = new long [M1];
 		memset(vector, 0, M * sizeof(long));
@@ -49,12 +47,10 @@ private:
 		complement = 0;
 	}
 
-	void init_buffer(char* buffer)
-	{
+	void init_buffer(char* buffer) {
 		complement++;
 		indexs = 0;
-		for (int i=0; i<LEN-1; i++)
-		{
+		for (int i = 0; i < LEN-1; i++) {
 			short enc = encode(buffer[i]);
 			one_l[enc]++;
 			total_l++;
@@ -63,8 +59,7 @@ private:
 		second[indexs]++;
 	}
 
-	void cont_buffer(char ch)
-	{
+	void cont_buffer(char ch) {
 		short enc = encode(ch);
 		one_l[enc]++;
 		total_l++;
@@ -80,8 +75,7 @@ public:
 	double* tv;
 	long *ti;
 
-	Bacteria(const char* filename)
-	{
+	Bacteria(const char* filename) {
 		FILE * bacteria_file = fopen(filename,"r");
 		if (bacteria_file == NULL) {
 			throw invalid_argument("BAD DATA DIRECTORY. Please specify full relative path.");
@@ -89,21 +83,18 @@ public:
 		InitVectors();
 
 		char ch;
-		while ((ch = fgetc(bacteria_file)) != EOF)
-		{
-			if (ch == '>')
-			{
+		while ((ch = fgetc(bacteria_file)) != EOF) {
+			if (ch == '>') {
 				while (fgetc(bacteria_file) != '\n'); // skip rest of line
 
 				char buffer[LEN-1];
 				fread(buffer, sizeof(char), LEN-1, bacteria_file);
 				init_buffer(buffer);
-			}
-			else if (ch == '\r') {
+			} else if (ch == '\r') {
 				// Skip carriage return.
-			}
-			else if (ch != '\n')
+			} else if (ch != '\n') {
 				cont_buffer(ch);
+			}
 		}
 
 		long total_plus_complement = total + complement;
@@ -114,47 +105,45 @@ public:
 		long i_div_M1 = 0;
 
 		double one_l_div_total[AA_NUMBER];
-		for (int i=0; i<AA_NUMBER; i++)
+		for (int i = 0; i < AA_NUMBER; i++) {
 			one_l_div_total[i] = (double)one_l[i] / total_l;
+		}
 		
 		double* second_div_total = new double[M1];
-		for (int i=0; i<M1; i++)
+		for (int i = 0; i < M1; i++) {
 			second_div_total[i] = (double)second[i] / total_plus_complement;
+		}
 
 		count = 0;
 		double* t = new double[M];
 
-		for(long i=0; i<M; i++)
-		{
+		for(long i = 0; i < M; i++) {
 			double p1 = second_div_total[i_div_aa_number];
 			double p2 = one_l_div_total[i_mod_aa_number];
 			double p3 = second_div_total[i_mod_M1];
 			double p4 = one_l_div_total[i_div_M1];
 			double stochastic =  (p1 * p2 + p3 * p4) * total_div_2;
 
-			if (i_mod_aa_number == AA_NUMBER-1)
-			{
+			if (i_mod_aa_number == AA_NUMBER-1) {
 				i_mod_aa_number = 0;
 				i_div_aa_number++;
-			}
-			else
+			} else {
 				i_mod_aa_number++;
+			}
 
-			if (i_mod_M1 == M1-1)
-			{
+			if (i_mod_M1 == M1-1) {
 				i_mod_M1 = 0;
 				i_div_M1++;
-			}
-			else
+			} else {
 				i_mod_M1++;
+			}
 
-			if (stochastic > EPSILON) 
-			{
+			if (stochastic > EPSILON) {
 				t[i] = (vector[i] - stochastic) / stochastic;
 				count++;
-			}
-			else
+			} else {
 				t[i] = 0;
+			}
 		}
 		
 		delete second_div_total;
@@ -165,10 +154,8 @@ public:
 		ti = new long[count];
 
 		int pos = 0;
-		for (long i=0; i<M; i++)
-		{
-			if (t[i] != 0)
-			{
+		for (long i = 0; i < M; i++) {
+			if (t[i] != 0) {
 				tv[pos] = t[i];
 				ti[pos] = i;
 				pos++;
@@ -180,8 +167,7 @@ public:
 	}
 };
 
-void ReadDataDir(char* data_dir)
-{
+void ReadDataDir(char* data_dir) {
 	// Retrieve filenames in data directory.
 	// Based on https://stackoverflow.com/a/612176
 	DIR *dir;
@@ -200,31 +186,26 @@ void ReadDataDir(char* data_dir)
 	}
 }
 
-double CompareBacteria(Bacteria* b1, Bacteria* b2)
-{
+double CompareBacteria(Bacteria* b1, Bacteria* b2) {
 	double correlation = 0;
 	double vector_len1=0;
 	double vector_len2=0;
 	long p1 = 0;
 	long p2 = 0;
-	while (p1 < b1->count && p2 < b2->count)
-	{
+
+	while (p1 < b1->count && p2 < b2->count) {
 		long n1 = b1->ti[p1];
 		long n2 = b2->ti[p2];
-		if (n1 < n2)
-		{
+
+		if (n1 < n2) {
 			double t1 = b1->tv[p1];
 			vector_len1 += (t1 * t1);
 			p1++;
-		}
-		else if (n2 < n1)
-		{
+		} else if (n2 < n1) {
 			double t2 = b2->tv[p2];
 			p2++;
 			vector_len2 += (t2 * t2);
-		}
-		else
-		{
+		} else {
 			double t1 = b1->tv[p1++];
 			double t2 = b2->tv[p2++];
 			vector_len1 += (t1 * t1);
@@ -232,14 +213,14 @@ double CompareBacteria(Bacteria* b1, Bacteria* b2)
 			correlation += t1 * t2;
 		}
 	}
-	while (p1 < b1->count)
-	{
+
+	while (p1 < b1->count) {
 		long n1 = b1->ti[p1];
 		double t1 = b1->tv[p1++];
 		vector_len1 += (t1 * t1);
 	}
-	while (p2 < b2->count)
-	{
+
+	while (p2 < b2->count) {
 		long n2 = b2->ti[p2];
 		double t2 = b2->tv[p2++];
 		vector_len2 += (t2 * t2);
@@ -248,26 +229,24 @@ double CompareBacteria(Bacteria* b1, Bacteria* b2)
 	return correlation / (sqrt(vector_len1) * sqrt(vector_len2));
 }
 
-void CompareAllBacteria()
-{
+void CompareAllBacteria() {
 	Bacteria** b = new Bacteria*[number_bacteria];
-    for(int i=0; i<number_bacteria; i++)
-	{
+	
+    for(int i = 0; i < number_bacteria; i++) {
 		printf("load %d of %d\t%s\n", i+1, number_bacteria, bacteria_name[i].c_str());
 		b[i] = new Bacteria(bacteria_name[i].c_str());
 	}
 
-    for(int i=0; i<number_bacteria-1; i++)
-		for(int j=i+1; j<number_bacteria; j++)
-		{
+    for(int i = 0; i < number_bacteria-1; i++) {
+		for(int j = i+1; j < number_bacteria; j++) {
 			printf("%2d %2d -> ", i, j);
 			double correlation = CompareBacteria(b[i], b[j]);
 			printf("%.20lf\n", correlation);
 		}
+	}
 }
 
-int main(int argc,char * argv[])
-{
+int main(int argc,char * argv[]) {
 	time_t t1 = time(NULL);
 
 	Init();
