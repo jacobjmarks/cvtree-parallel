@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -181,6 +182,7 @@ void ReadDataDir(char* data_dir) {
 			}
 		}
 		closedir (dir);
+		sort(bacteria_name.begin(), bacteria_name.end());
 	} else {
 		perror ("");
 	}
