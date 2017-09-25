@@ -12,6 +12,6 @@ These shell scripts simply run the following commands:
 
 ```
 rm [sequential|parallel].out
-g++ [Sequential|Parallel]/improved.cpp -o [sequential|parallel].out
+g++ [Sequential|Parallel]/cvtree-[sequential|parallel].cpp -o [sequential|parallel].out
 ./[sequential|parallel].out data/
 ```
