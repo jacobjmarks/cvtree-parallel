@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <omp.h>
 
 using namespace std;
 
@@ -234,16 +235,17 @@ double CompareBacteria(Bacteria* b1, Bacteria* b2) {
 void CompareAllBacteria() {
 	Bacteria** b = new Bacteria*[number_bacteria];
 	
+	#pragma omp parallel for
     for(int i = 0; i < number_bacteria; i++) {
-		printf("load %.2d of %.2d - %s\n", i+1, number_bacteria, bacteria_name[i].c_str());
+		printf("[%d] load %.2d of %.2d - %s\n", omp_get_thread_num()+1, i+1, number_bacteria, bacteria_name[i].c_str());
 		b[i] = new Bacteria(bacteria_name[i].c_str());
 	}
 
+	#pragma omp parallel for
     for(int i = 0; i < number_bacteria-1; i++) {
 		for(int j = i+1; j < number_bacteria; j++) {
-			printf("%.2d %.2d -> ", i, j);
 			double correlation = CompareBacteria(b[i], b[j]);
-			printf("%.20lf\n", correlation);
+			printf("[%d] %.2d %.2d -> %.20lf\n", omp_get_thread_num()+1, i, j, correlation);
 		}
 	}
 }
