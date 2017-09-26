@@ -235,13 +235,13 @@ void CompareAllBacteria() {
 	Bacteria** b = new Bacteria*[number_bacteria];
 	
     for(int i = 0; i < number_bacteria; i++) {
-		printf("load %d of %d\t%s\n", i+1, number_bacteria, bacteria_name[i].c_str());
+		printf("load %.2d of %.2d - %s\n", i+1, number_bacteria, bacteria_name[i].c_str());
 		b[i] = new Bacteria(bacteria_name[i].c_str());
 	}
 
     for(int i = 0; i < number_bacteria-1; i++) {
 		for(int j = i+1; j < number_bacteria; j++) {
-			printf("%2d %2d -> ", i, j);
+			printf("%.2d %.2d -> ", i, j);
 			double correlation = CompareBacteria(b[i], b[j]);
 			printf("%.20lf\n", correlation);
 		}
