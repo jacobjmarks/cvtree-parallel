@@ -8,10 +8,18 @@ The compiled program take a single parameter indicating the data directory conta
 
 To quickly compile and run the cvtree on sequences within the `data/` directory, `sequential.sh` and `parallel.sh` can be used.
 
-These shell scripts simply run the following commands:
+These shell scripts run the following commands:
 
+`sequential.sh`
 ```
-rm [sequential|parallel].out
-g++ [Sequential|Parallel]/cvtree-[sequential|parallel].cpp -o [sequential|parallel].out
-./[sequential|parallel].out data/
+rm sequential.out
+g++ Sequential/cvtree-sequential.cpp -o sequential.out
+./sequential.out data/
+```
+
+`parallel.sh`
+```
+rm parallel.out
+g++ Parallel/cvtree-parallel.cpp -fopenmp -o parallel.out
+./parallel.out data/
 ```
