@@ -78,25 +78,29 @@ public:
 	long *ti;
 
 	Bacteria(const char* filename) {
-		FILE * bacteria_file = fopen(filename,"r");
-		if (bacteria_file == NULL) {
-			throw invalid_argument("BAD DATA DIRECTORY. Please specify full relative path.");
-		}
-		InitVectors();
-
-		char ch;
-		while ((ch = fgetc(bacteria_file)) != EOF) {
-			if (ch == '>') {
-				while (fgetc(bacteria_file) != '\n'); // skip rest of line
-
-				char buffer[LEN-1];
-				fread(buffer, sizeof(char), LEN-1, bacteria_file);
-				init_buffer(buffer);
-			} else if (ch == '\r') {
-				// Skip carriage return.
-			} else if (ch != '\n') {
-				cont_buffer(ch);
+		#pragma omp critical
+		{
+			FILE * bacteria_file = fopen(filename,"r");
+			if (bacteria_file == NULL) {
+				throw invalid_argument("BAD DATA DIRECTORY. Please specify full relative path.");
 			}
+			InitVectors();
+
+			char ch;
+			while ((ch = fgetc(bacteria_file)) != EOF) {
+				if (ch == '>') {
+					while (fgetc(bacteria_file) != '\n'); // skip rest of line
+
+					char buffer[LEN-1];
+					fread(buffer, sizeof(char), LEN-1, bacteria_file);
+					init_buffer(buffer);
+				} else if (ch == '\r') {
+					// Skip carriage return.
+				} else if (ch != '\n') {
+					cont_buffer(ch);
+				}
+			}
+			fclose (bacteria_file);
 		}
 
 		long total_plus_complement = total + complement;
@@ -164,8 +168,6 @@ public:
 			}
 		}
 		delete t;
-
-		fclose (bacteria_file);
 	}
 };
 
