@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 using namespace std;
 
@@ -239,13 +240,31 @@ void CompareAllBacteria() {
 		b[i] = new Bacteria(bacteria_name[i].c_str());
 	}
 
+	vector<vector<double>> results;	
+
+	printf("Comparing...");
     for(int i = 0; i < number_bacteria-1; i++) {
+		results.push_back(vector<double>(number_bacteria, 0.0));		
 		for(int j = i+1; j < number_bacteria; j++) {
-			printf("%.2d %.2d -> ", i, j);
+			// printf("%.2d %.2d -> ", i, j);
 			double correlation = CompareBacteria(b[i], b[j]);
-			printf("%.20lf\n", correlation);
+			// printf("%.20lf\n", correlation);
+			results[i][j] = correlation;
 		}
 	}
+	printf("Done!\n");
+
+	printf("Writing results...");
+	ofstream output;
+	output.open("results-sequential.csv");
+	output << "indexA" << ',' << "bacteriaA" << ',' << "indexB" << ',' << "bacteriaB" << ',' << "correlation" << endl;	
+	for (int i = 0; i < number_bacteria-1; i++) {
+		for (int j = i+1; j < number_bacteria; j++) {
+			output << i << ',' << bacteria_name[i] << ',' << j << ',' << bacteria_name[j] << ',' << results[i][j] << endl;
+		}
+	}	
+	output.close();
+	printf("Done!\n");
 }
 
 int main(int argc,char * argv[]) {
