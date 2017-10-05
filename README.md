@@ -1,7 +1,7 @@
 # cvtree-parallel
 **Parallelization of Genome Sequence Comparison**
 
-Completed for academic work - Queensland University of Technology
+~Completed for~ Ongoing academic work - Queensland University of Technology
 
 ## Usage
 -TO BE UPDATED-
