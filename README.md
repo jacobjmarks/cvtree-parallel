@@ -4,6 +4,8 @@
 Completed for academic work - Queensland University of Technology
 
 ## Usage
+-TO BE UPDATED-
+
 The compiled program take a single parameter indicating the data directory containing the genome sequences.
 
 To quickly compile and run the cvtree on sequences within the `data/` directory, `sequential.sh` and `parallel.sh` can be used.
