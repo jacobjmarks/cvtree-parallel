@@ -98,6 +98,7 @@ public:
 				cont_buffer(ch);
 			}
 		}
+		fclose (bacteria_file);
 
 		long total_plus_complement = total + complement;
 		double total_div_2 = total * 0.5;
@@ -164,8 +165,6 @@ public:
 			}
 		}
 		delete t;
-
-		fclose (bacteria_file);
 	}
 };
 
@@ -236,27 +235,22 @@ void CompareAllBacteria() {
 	Bacteria** b = new Bacteria*[number_bacteria];
 	
     for(int i = 0; i < number_bacteria; i++) {
-		printf("load %.2d of %.2d - %s\n", i+1, number_bacteria, bacteria_name[i].c_str());
+		// printf("load %.2d of %.2d - %s\n", i+1, number_bacteria, bacteria_name[i].c_str());
 		b[i] = new Bacteria(bacteria_name[i].c_str());
 	}
 
-	vector<vector<double>> results;	
+	vector<vector<double>> results(number_bacteria);	
 
-	printf("Comparing...");
     for(int i = 0; i < number_bacteria-1; i++) {
-		results.push_back(vector<double>(number_bacteria, 0.0));		
+		results[i] = vector<double>(number_bacteria, 0.0);
 		for(int j = i+1; j < number_bacteria; j++) {
-			// printf("%.2d %.2d -> ", i, j);
 			double correlation = CompareBacteria(b[i], b[j]);
-			// printf("%.20lf\n", correlation);
 			results[i][j] = correlation;
+			// printf("%.2d %.2d -> %.20lf\n", i, j, correlation);			
 		}
 	}
-	printf("Done!\n");
-
-	printf("Writing results...");
 	ofstream output;
-	output.open("results-sequential.csv");
+	output.open("results-sequential-vector.csv");
 	output << "indexA" << ',' << "bacteriaA" << ',' << "indexB" << ',' << "bacteriaB" << ',' << "correlation" << endl;	
 	for (int i = 0; i < number_bacteria-1; i++) {
 		for (int j = i+1; j < number_bacteria; j++) {
@@ -264,7 +258,6 @@ void CompareAllBacteria() {
 		}
 	}	
 	output.close();
-	printf("Done!\n");
 }
 
 int main(int argc,char * argv[]) {
