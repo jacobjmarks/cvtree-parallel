@@ -1,27 +1,27 @@
 # cvtree-parallel
 **Parallelization of Genome Sequence Comparison**
 
-~Completed for~ Ongoing academic work - Queensland University of Technology
+Ongoing academic work - Queensland University of Technology
 
 ## Usage
--TO BE UPDATED-
 
 The compiled program take a single parameter indicating the data directory containing the genome sequences.
 
-To quickly compile and run the cvtree on sequences within the `data/` directory, `sequential.sh` and `parallel.sh` can be used.
+To quickly compile and run the cvtree on sequences within the `data/` directory, the scripts `sequential.sh` and `parallel.sh` can be used.
 
-These shell scripts run the following commands:
+These shell scripts run as follows:
 
-`sequential.sh`
+#### `sequential.sh`
 ```
-rm sequential.out
-g++ Sequential/cvtree-sequential.cpp -o sequential.out
+rm -f sequential.out
+g++ -O2 cvtree-sequential.cpp -o sequential.out
 ./sequential.out data/
+rm -f parallel.out
 ```
-
-`parallel.sh`
+#### `parallel.sh`
 ```
-rm parallel.out
-g++ Parallel/cvtree-parallel.cpp -fopenmp -o parallel.out
+rm -f parallel.out
+g++ -O2 -fopenmp cvtree-parallel.cpp -o parallel.out
 ./parallel.out data/
+rm -f parallel.out
 ```
