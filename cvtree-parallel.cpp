@@ -31,20 +31,18 @@ void Init() {
 
 class Bacteria {
 private:
-	long* vector;
-	long* second;
-	long one_l[AA_NUMBER];
+	vector<long> vectorA;
+	vector<long> vectorB;
+	vector<long> one_l;
 	long indexs;
 	long total;
 	long total_l;
 	long complement;
 
 	void InitVectors() {
-		vector = new long [M];
-		second = new long [M1];
-		memset(vector, 0, M * sizeof(long));
-		memset(second, 0, M1 * sizeof(long));
-		memset(one_l, 0, AA_NUMBER * sizeof(long));
+		vectorA = vector<long>(M, 0.0);
+		vectorB = vector<long>(M1, 0.0);
+		one_l = vector<long>(AA_NUMBER, 0.0);
 		total = 0;
 		total_l = 0;
 		complement = 0;
@@ -59,7 +57,7 @@ private:
 			total_l++;
 			indexs = indexs * AA_NUMBER + enc;
 		}
-		second[indexs]++;
+		vectorB[indexs]++;
 	}
 
 	void cont_buffer(char ch) {
@@ -67,10 +65,10 @@ private:
 		one_l[enc]++;
 		total_l++;
 		long index = indexs * AA_NUMBER + enc;
-		vector[index]++;
+		vectorA[index]++;
 		total++;
 		indexs = (indexs % M2) * AA_NUMBER + enc;
-		second[indexs]++;
+		vectorB[indexs]++;
 	}
 
 public:
@@ -118,7 +116,7 @@ public:
 		
 		double* second_div_total = new double[M1];
 		for (int i = 0; i < M1; i++) {
-			second_div_total[i] = (double)second[i] / total_plus_complement;
+			second_div_total[i] = (double)vectorB[i] / total_plus_complement;
 		}
 
 		count = 0;
@@ -146,7 +144,7 @@ public:
 			}
 
 			if (stochastic > EPSILON) {
-				t[i] = (vector[i] - stochastic) / stochastic;
+				t[i] = (vectorA[i] - stochastic) / stochastic;
 				count++;
 			} else {
 				t[i] = 0;
@@ -154,8 +152,9 @@ public:
 		}
 		
 		delete second_div_total;
-		delete vector;
-		delete second;
+		vector<long>().swap(vectorA);
+		vector<long>().swap(vectorB);
+		vector<long>().swap(one_l);
 
 		tv = new double[count];
 		ti = new long[count];
