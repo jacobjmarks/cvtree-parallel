@@ -1,7 +1,8 @@
 # cvtree-parallel
 **Parallelization of Genome Sequence Comparison**
 
-Ongoing academic work - Queensland University of Technology
+Completed for academic work - Queensland University of Technology
+### [View Report](https://www.dropbox.com/s/e91fbr33kg2ieos/9188100%20Report.pdf?dl=0)
 
 ## Source
 `cvtree-sequential-original.sh` - Original sequential program. Does not compile nor run in this environment.
