@@ -20,6 +20,8 @@ short code[27] = { 0, 2, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, -1, 12, 13, 14, 
 #define AA_NUMBER		20
 #define	EPSILON			1e-010
 
+#define NUM_THREADS		4
+
 void Init() {
 	M2 = 1;
 	for (int i = 0; i < LEN-2; i++) {	// M2 = AA_NUMBER ^ (LEN-2);
@@ -267,6 +269,12 @@ void CompareAllBacteria() {
 }
 
 int main(int argc,char * argv[]) {
+	if (argc < 2) {
+		throw invalid_argument("Please specify data directory.");
+	}
+
+	omp_set_num_threads(NUM_THREADS);
+
 	time_t t1 = time(NULL);
 
 	Init();

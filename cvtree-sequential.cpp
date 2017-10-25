@@ -248,8 +248,9 @@ void CompareAllBacteria() {
 			// printf("%.2d %.2d -> %.20lf\n", i, j, correlation);			
 		}
 	}
+	
 	ofstream output;
-	output.open("results-sequential-vector.csv");
+	output.open("results-sequential.csv");
 	output << "indexA" << ',' << "bacteriaA" << ',' << "indexB" << ',' << "bacteriaB" << ',' << "correlation" << endl;	
 	for (int i = 0; i < number_bacteria-1; i++) {
 		for (int j = i+1; j < number_bacteria; j++) {
@@ -260,6 +261,10 @@ void CompareAllBacteria() {
 }
 
 int main(int argc,char * argv[]) {
+	if (argc < 2) {
+		throw invalid_argument("Please specify data directory.");
+	}
+
 	time_t t1 = time(NULL);
 
 	Init();
