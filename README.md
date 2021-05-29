@@ -2,7 +2,7 @@
 **Parallelization of Genome Sequence Comparison**
 
 Completed for academic work - Queensland University of Technology
-### [View Report](https://www.dropbox.com/s/y1bq42ur35rym5n/9188100%20Report.pdf?dl=0)
+### [View Report](./assets/9188100%20Report.pdf)
 
 ## Source
 `cvtree-sequential-original.sh` - Original sequential program. Does not compile nor run in this environment.
